@@ -140,6 +140,12 @@ b64decode()
   fi
 }
 
+convall() {
+  ext=$1
+  toext=$2
+  for i in *.$ext; do ffmpeg -i $i $i.$toext; done
+}
+
 ### }} FUNCTIONS
 
 ### {{ PROMPT
