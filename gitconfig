@@ -1,13 +1,15 @@
-[url "git@github.com:github"]
-    insteadOf = "https://github.com/github"
-    insteadOf = "github:github"
-    insteadOf = "git://github.com/github"
-
+[url "git@github.com:"]
+    insteadOf = https://github.com/
+[url "git@github.com:"]
+    insteadOf = http://github.com/
+# [url "git@github.com:github"]
+#     insteadOf = "https://github.com/github"
+#     insteadOf = "github:github"
+#     insteadOf = "git://github.com/github"
 [url "git@github.com:"]
     pushInsteadOf = "https://github.com/"
     pushInsteadOf = "github:"
     pushInsteadOf = "git://github.com/"
-
 [url "git://github.com/"]
     insteadOf = "github:"
 
@@ -15,26 +17,53 @@
     insteadOf = "gst:"
     pushInsteadOf = "gist:"
     pushInsteadOf = "git://gist.github.com/"
-
 [url "git://gist.github.com/"]
     insteadOf = "gist:"
 
+# [includeIf "gitdir:personal/"]
+#     path = .gitconfig-personal
+# [includeIf "gitdir:work/"]
+#     path = .gitconfig-work
+
 [user]
     name = Oleg Kovalov
-    email = iamolegkovalov@gmail.com
+    email = oleg@hey.com
 
 [alias]
     hist = log --pretty=format:"%C(yellow)%h%C(reset) %C(green)%ad%C(reset) %C(red)|%C(reset) %s %C(bold blue)[%an]%C(reset)%C(yellow)%d%C(reset)" --graph --date=short
     # grog = log --graph --abbrev-commit --decorate --all --format=format:"%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(dim white) - %an%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n %C(white)%s%C(reset)\"
     dbr = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset' --abbrev-commit --date=relative
     lg = log --pretty=oneline --abbrev-commit
+    lg = log -p --pretty=fuller --abbrev-commit
+    lgg = log --pretty=fuller --abbrev-commit --stat
+    loghot = !sh -c 'git log --format=format: --name-only | grep -v "^$" | sort | uniq -c | sort -rg | head -10'
 
     fap = fetch --all --prune
     ps = push
+    pf = push --force
     pl = pull
+    forcepull = reset --hard origin
+    # ri = rebase -i 
+    rc = rebase --continue
     co = checkout
     cb = checkout -b
+    cm = checkout master
     co-pr = !sh -c 'git fetch origin pull/$1/head:pr/$1 && git checkout pr/$1' -
+
+    st = status --short -uno
+    ci = commit
+    ca = commit --amend
+    caa = commit -a --amend
+    br = branch
+    df = diff
+    up = pull --rebase
+    sync = !sh -c 'git fetch origin master:master && git rebase -i master'
+
+# [core]
+#     autocrlf = true
+
+[init]
+    defaultBranch = main
 
 [color "branch"]
     current = green
@@ -42,5 +71,17 @@
 
 [push]
     default = current
+
+[branch "master"]
+    remote = origin
+    merge = refs/heads/master
+
 [pull]
     default = current
+    # rebase = true
+
+[filter "lfs"]
+  required = true
+  clean = git-lfs clean -- %f
+  smudge = git-lfs smudge -- %f
+  process = git-lfs filter-process
