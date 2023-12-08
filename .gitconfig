@@ -12,16 +12,16 @@
 [branch]
     autoSetupMerge = always
 [fetch]
-    prune = true
+	prune = true
 [pull]
     default = current
     rebase = true
     ff = only
 [rebase]
     autoStash = true
-; [push]
-;     followTags = true
-;     default = current
+[push]
+    followTags = true
+    default = current
 [merge]
     ff = true
 [branch "main"]
@@ -36,29 +36,98 @@
     smudge = git-lfs smudge -- %f
     process = git-lfs filter-process
 [alias]
-    hist = log --pretty=format:"%C(yellow)%h%C(reset) %C(green)%ad%C(reset) %C(red)|%C(reset) %s %C(bold blue)[%an]%C(reset)%C(yellow)%d%C(reset)" --graph --date=short
+    # *********************
+    main = checkout main
+    new = checkout -b
+    to = checkout
+    back = checkout -
+
+    fix = commit -m "fix"
+    with = !git add -A && git commit --allow-empty -m
+    save = !git add -A && git commit --allow-empty -m 'SAVEPOINT'
+    wip = commit -am "WIP"
+    undo = reset --soft HEAD~1
+    last = log -1 --stat    
+    wut = status -sb
+    # undo = reset HEAD~1 --mixed
+
+    fap = fetch --all --prune
+    pub = push origin HEAD --force-with-lease
+    upd = !git pull origin $(git rev-parse --abbrev-ref HEAD) --rebase --prune
+    sync = !git pull origin main --rebase --prune
+    # squash = "!git rebase -v -i main"
+
+    aliases = !git config --list | grep alias | cut -c 7-
+    branches = !"git for-each-ref --sort='-authordate:iso8601' --format=' %(color:green)%(authordate:iso8601)%09%(color:white)%(refname:short)' refs/heads"
+    # *********************
+
+    rc = rebase --continue
+    rb = rebase -i origin/main
+    
+    # Rebase workflow
+    # mainbranch = "!git remote show origin | sed -n '/HEAD branch/s/.*: //p'"
+    # synced = "!git pull origin main --rebase"
+    # update = "!git pull origin $(git rev-parse --abbrev-ref HEAD) --rebase"
+    # squash = "!git rebase -v -i $(git mainbranch)"
+    # publish = push origin HEAD --force-with-lease
+    # pub = publish
+
+    # ********************
+
+    # ********************
+    # My dumbass typos
+    # com = commit --amend
+    # to = checkout
+
+    # *********************
+    # Github
+    # From - https://salferrarello.com/git-alias-open-pull-request-github/
+    pr = "!f() { \
+        open \"$(git ls-remote --get-url $(git config --get branch.$(git rev-parse --abbrev-ref HEAD).remote) \
+        | sed 's|git@github.com:\\(.*\\)$|https://github.com/\\1|' \
+        | sed 's|\\.git$||'; \
+        )/compare/$(\
+        git config --get branch.$(git rev-parse --abbrev-ref HEAD).merge | cut -d '/' -f 3- \
+        )?expand=1\"; \
+    }; f"
+    hub = "!f() { \
+        open \"$(git ls-remote --get-url \
+        | sed 's|git@github.com:\\(.*\\)$|https://github.com/\\1|' \
+        | sed 's|\\.git$||'; \
+        )\"; \
+    }; f"
+
+    squash = "!f(){ git reset --soft HEAD~${1} && git commit --edit -m\"$(git log --format=%B --reverse HEAD..HEAD@{1})\"; };f"
+
+
     # grog = log --graph --abbrev-commit --decorate --all --format=format:"%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(dim white) - %an%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n %C(white)%s%C(reset)\"
-    lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset' --abbrev-commit --date=relative
-    lg2 = log --pretty=oneline --abbrev-commit
-    lg3 = log --decorate --oneline --topo-order --no-merges
-    llog = log --graph --oneline --decorate --topo-order
-    loghot = !sh -c 'git log --format=format: --name-only | grep -v "^$" | sort | uniq -c | sort -rg | head -10'
-    graph = log --graph --oneline --all
-    lol = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
-    h    = log --decorate --all --oneline --graph
-    lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
-    yolo = !git add -A && git commit -m \"$(curl -s whatthecommit.com/index.txt)\"
-    dm = "!git branch -r --merged | grep vrutkovs | egrep -v '(^\\*|master)' | sed 's;vrutkovs/;;' | xargs -r -I{} sh -c 'git branch -D {} && git push --delete vrutkovs {}' && git gc"
     clog = log --format='%C(dim)%h    %<(14)%ad    %<(24)%an    %C(reset)%s' --date=relative
-    glog = log-graph
-    logs = log --pretty=format:'%h %ad | %s%d [%an]' --graph --date=short
-    type = cat-file -t
+    dm = "!git branch -r --merged | grep vrutkovs | egrep -v '(^\\*|master)' | sed 's;vrutkovs/;;' | xargs -r -I{} sh -c 'git branch -D {} && git push --delete vrutkovs {}' && git gc"
     dump = cat-file -p
+    gl = log --oneline --abbrev-commit --all --graph --decorate --color
+    glfull = log --oneline --abbrev-commit --all --graph --date=short --pretty=format:'%h - %an, %cd : %s' --date=short
+    glog = log-graph
+    graph = log --graph --oneline --all
+    grog = log --graph --abbrev-commit --decorate --all --format=format:\"%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(dim white) - %an%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n %C(white)%s%C(reset)\"
+    h    = log --decorate --all --oneline --graph
+    hist = log --pretty=format:'%C(yellow)[%ad]%C(reset) %C(green)[%h]%C(reset) | %C(red)%s %C(bold red){{%an}}%C(reset) %C(blue)%d%C(reset)' --graph --date=short 
+    hist = log --pretty=format:"%C(yellow)%h%C(reset) %C(green)%ad%C(reset) %C(red)|%C(reset) %s %C(bold blue)[%an]%C(reset)%C(yellow)%d%C(reset)" --graph --date=short
+    kek = !git --no-pager log --oneline --graph -n 18 --decorate
+    lb = !git reflog show --pretty=format:'%gs ~ %gd' --date=relative | grep 'checkout:' | grep -oE '[^ ]+ ~ .*' | awk -F~ '!seen[$1]++' | head -n 10 | awk -F' ~ HEAD@{' '{printf(\"  \\033[33m%s: \\033[37m %s\\033[0m\\n\", substr($2, 1, length($2)-1), $1)}'
+    lg = !"git lg1"
+    lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
+    lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset' --abbrev-commit --date=relative
     lg1 = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)' --all
     lg2 = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n''          %C(white)%s%C(reset) %C(dim white)- %an%C(reset)' --all
-    lg = !"git lg1"
-    co = checkout
-    squash = "!f(){ git reset --soft HEAD~${1} && git commit --edit -m\"$(git log --format=%B --reverse HEAD..HEAD@{1})\"; };f"
+    lg2 = log --pretty=oneline --abbrev-commit
+    lg3 = log --decorate --oneline --topo-order --no-merges
+    lgg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
+    llog = log --graph --oneline --decorate --topo-order
+    loghot = !sh -c 'git log --format=format: --name-only | grep -v "^$" | sort | uniq -c | sort -rg | head -10'
+    logs = log --pretty=format:'%h %ad | %s%d [%an]' --graph --date=short
+    lol = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
+    type = cat-file -t
+    yolo = !git add -A && git commit -m \"$(curl -s ii.com/index.txt)\"
 
     # hist = log --pretty=format:"%C(yellow)%h%C(reset) %C(green)%ad%C(reset) %C(red)|%C(reset) %s %C(bold blue)[%an]%C(reset)%C(yellow)%d%C(reset)" --graph --date=short
     # # grog = log --graph --abbrev-commit --decorate --all --format=format:"%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(dim white) - %an%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n %C(white)%s%C(reset)\"
@@ -68,36 +137,18 @@
     # changelog = !sh -c 'git log --pretty=oneline --abbrev-commit --no-decorate --no-color tags/$1..tags/$2' -
 
     cl = clone
-    last = log -1 --stat
-    undo = reset --soft HEAD~1
-    fap = fetch --all --prune
     up = pull --rebase
     sync = !sh -c 'git fetch origin main:main && git rebase -i main'
-
-    aliases = !git config --list | grep alias | cut -c 7-
-    branches = !"git for-each-ref --sort='-authordate:iso8601' --format=' %(color:green)%(authordate:iso8601)%09%(color:white)%(refname:short)' refs/heads"
-
-    aa = add --all
-    br = branch
     cp = cherry-pick
-    ci = commit --allow-empty
-    ca = commit --amend
 
-    ps = !"git push origin $(git rev-parse --abbrev-ref HEAD)"
-    pf = push --force
+    ; ps = !"git push origin $(git rev-parse --abbrev-ref HEAD)"
+    pf = !"git push --force origin $(git rev-parse --abbrev-ref HEAD)"
     pl = !"git pull origin $(git rev-parse --abbrev-ref HEAD)"
-
-    co = checkout
-    cb = checkout -b
-    cm = checkout main
-
-    rc = rebase --continue
-    rb = rebase -i
-
     co-pr = !sh -c 'git fetch origin pull/$1/head:pr/$1 && git checkout pr/$1' -
-    on-branch = !git log --oneline --decorate --graph --first-parent --topo-order --no-merges $1..HEAD
-    prune-all = !git remote | xargs -n 1 git remote prune
-    all = "!f() { ls | xargs -I{} git -C {} $1; };"
+    ; on-branch = !git log --oneline --decorate --graph --first-parent --topo-order --no-merges $1..HEAD
+    ; prune-all = !git remote | xargs -n 1 git remote prune
+    ; all = "!f() { ls | xargs -I{} git -C {} $1; };"
+    ; amend = "!f() { git commit -S --amend --date=\"$(date -R)\" ; }; f"
 
     to-pr = "!f() { \
         open \"$(git ls-remote --get-url $(git config --get branch.main.remote) \
@@ -107,8 +158,6 @@
         git rev-parse --abbrev-ref HEAD | cut -d '/' -f 3- \
         )?expand=1\"; \
     }; f"
-
-    amend = "!f() { git commit -S --amend --date=\"$(date -R)\" ; }; f"
 
     # Usage: git pr-checkout origin 42 pull/42
     pr-checkout = "!sh -c '\
@@ -126,24 +175,18 @@
         )?expand=1\"; \
     }; f"
 
-    gui = !sh -c '/usr/local/opt/git/bin/git gui'
+    ; gui = !sh -c '/usr/local/opt/git/bin/git gui'
     
     rb = "!sh -c \"git rebase -i HEAD~$1\" -"
-    rtag = "!f() { git tag -d \"${@}\" && \
-                              git push --delete origin  \"${@}\" ; \
-                            } ; f";
+    rtag = "!f() { git tag -d \"${@}\" && git push --delete origin  \"${@}\" ; } ; f";
 
-    hist = log --pretty=format:'%C(yellow)[%ad]%C(reset) %C(green)[%h]%C(reset) | %C(red)%s %C(bold red){{%an}}%C(reset) %C(blue)%d%C(reset)' --graph --date=short 
-    gl = log --oneline --abbrev-commit --all --graph --decorate --color
-    glfull = log --oneline --abbrev-commit --all --graph --date=short --pretty=format:'%h - %an, %cd : %s' --date=short
-    unstage = reset HEAD --
-    that-refs = "!git show-ref | grep $(git rev-parse HEAD)"
-    master-here = "!bash -c 'PREV_HEAD=`git rev-parse HEAD`; git checkout master && git merge --ff-only $PREV_HEAD'"
-    develop-here = "!bash -c 'PREV_HEAD=`git rev-parse HEAD`; git checkout develop && git merge --ff-only $PREV_HEAD'"
-    grog = log --graph --abbrev-commit --decorate --all --format=format:\"%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(dim white) - %an%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n %C(white)%s%C(reset)\"
     grep-rev = "!git grep $1 $(git rev-list --all -- $2) -- $2"
-    ui = "!smerge ."
-    pnew = !git push --set-upstream origin "$(git rev-parse --abbrev-ref HEAD)"
+    ; unstage = reset HEAD --
+    ; that-refs = "!git show-ref | grep $(git rev-parse HEAD)"
+    ; master-here = "!bash -c 'PREV_HEAD=`git rev-parse HEAD`; git checkout master && git merge --ff-only $PREV_HEAD'"
+    ; develop-here = "!bash -c 'PREV_HEAD=`git rev-parse HEAD`; git checkout develop && git merge --ff-only $PREV_HEAD'"
+    ; ui = "!smerge ."
+    ; pnew = !git push --set-upstream origin "$(git rev-parse --abbrev-ref HEAD)"
 
 [url "git@github.com:"]
     insteadOf = https://github.com/
