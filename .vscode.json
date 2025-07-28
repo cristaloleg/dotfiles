@@ -1,87 +1,157 @@
 {
-    "go.formatTool": "gofumports",
-    "go.useLanguageServer": true,
-    "go.toolsManagement.autoUpdate": true,
-    "go.lintTool": "golangci-lint",
-    "go.lintFlags": [
-        "--enable=vet",
-        "--enable=golint",
-    ],
-    "go.coverMode": "atomic",
-    "go.coverOnSingleTest": true,
-    "go.coverOnSingleTestFile": true,
-    "go.testTimeout": "25s",
-    "go.testFlags": [
-        "-v",
-        "-race",
-        "-count=1",
-        "-shuffle=on"
-    ],
-    "go.vetFlags": [
-        "-all"
-    ],
-    "go.enableCodeLens": {
-        "references": false,
-        "runtest": true
-    },
-    "go.coverageDecorator": {
-        "type": "gutter",
-        "coveredHighlightColor": "rgba(64,128,128,0.5)",
-        "uncoveredHighlightColor": "rgba(128,64,64,0.25)",
-        "coveredGutterStyle": "blockblue",
-        "uncoveredGutterStyle": "slashyellow"
-    },
-    "go.editorContextMenuCommands": {
-        "toggleTestFile": false,
-        "addTags": false,
-        "removeTags": false,
-        "testAtCursor": false,
-        "testFile": false,
-        "testPackage": false,
-        "generateTestForFunction": false,
-        "generateTestForFile": false,
-        "generateTestForPackage": false,
-        "addImport": false,
-        "testCoverage": false,
-        "playground": false,
-        "debugTestAtCursor": false
-    },
-    "git.autoRepositoryDetection": false,
-    "git.enableCommitSigning": true,
-    "bookmarks.showCommandsInContextMenu": false,
-    "breadcrumbs.icons": false,
-    "diffEditor.ignoreTrimWhitespace": false,
-    "docker.showStartPage": false,
-    "editor.insertSpaces": false,
-    "editor.lightbulb.enabled": false,
-    "editor.fontFamily": "Fira Code",
-    "editor.fontLigatures": true,
-    "editor.minimap.enabled": false,
-    "editor.suggestSelection": "first",
-    "editor.maxTokenizationLineLength": 1000,
-    "editor.scrollBeyondLastLine": false,
-    "editor.find.addExtraSpaceOnTop": false,
-    "editor.snippetSuggestions": "none",
-    "extensions.ignoreRecommendations": true,
-    "files.autoSaveDelay": 1200,
-    "files.associations": {
-        "*.tmpl": "html",
-        "*.svelte": "html"
-    },
-    "outline.icons": false,
-    "outline.problems.badges": false,
-    "outline.problems.colors": false,
-    "outline.problems.enabled": false,
-    "search.maxResults": 1000,
-    "security.workspace.trust.untrustedFiles": "open",
-    "terminal.integrated.shell.osx": "zsh",
-    "window.autoDetectHighContrast": false,
-    "window.zoomLevel": 2,
-    "workbench.colorTheme": "Monokai",
-    "workbench.welcomePage.preferReducedMotion": true,
-    "workbench.activityBar.visible": false,
-    "workbench.editor.enablePreview": false,
-    "workbench.editor.enablePreviewFromQuickOpen": false,
-    "workbench.tips.enabled": false,
-    "diffEditor.renderSideBySide": false,
+	"go.testFlags": [
+		"-count=1",
+		// "-race",
+		"-timeout=700s",
+		// "-failfast",
+		"-benchmem",
+		// "-coverpkg=all",
+		// "-run=^$",
+		"-v",
+		"-p=1",
+		"-mod=readonly",
+		"-shuffle=on",
+		// "-gcflags=-B"
+	],
+	"go.coverMode": "atomic",
+	"go.coverOnSingleTest": true,
+	"go.coverOnSingleTestFile": true,
+	"go.testTimeout": "10s",
+	"go.formatTool": "gofumpt",
+	"gopls": {
+		"formatting.gofumpt": true
+	},
+	"go.toolsManagement.autoUpdate": true,
+	"go.toolsEnvVars": {
+		// "GOFUMPT_SPLIT_LONG_LINES": "on"
+	},
+	"go.vetFlags": [
+		"-all"
+	],
+	"go.lintFlags": [
+		"--config=~/.golangci.yaml",
+		"--enable=vet",
+		"--enable=golint"
+	],
+	"go.enableCodeLens": {
+		"runtest": true
+	},
+	"go.coverageDecorator": {
+		"type": "gutter",
+		"coveredHighlightColor": "rgba(64,128,128,0.5)",
+		"uncoveredHighlightColor": "rgba(128,64,64,0.25)",
+		"coveredGutterStyle": "blockblue",
+		"uncoveredGutterStyle": "slashyellow"
+	},
+	"go.editorContextMenuCommands": {
+		"toggleTestFile": false,
+		"addTags": false,
+		"removeTags": false,
+		"testAtCursor": false,
+		"testFile": false,
+		"testPackage": false,
+		"generateTestForFunction": false,
+		"generateTestForFile": false,
+		"generateTestForPackage": false,
+		"addImport": false,
+		"testCoverage": false,
+		"playground": false,
+		"debugTestAtCursor": false
+	},
+	"git.autoRepositoryDetection": false,
+	"git.enableCommitSigning": true,
+	"bookmarks.showCommandsInContextMenu": false,
+	"breadcrumbs.icons": false,
+	"editor.insertSpaces": false,
+	"editor.lightbulb.enabled": "off",
+	"editor.fontFamily": "Fira Code",
+	"editor.fontLigatures": true,
+	"editor.minimap.enabled": false,
+	"editor.suggestSelection": "first",
+	"editor.maxTokenizationLineLength": 1000,
+	"editor.scrollBeyondLastLine": false,
+	"editor.find.addExtraSpaceOnTop": false,
+	"editor.snippetSuggestions": "none",
+	"extensions.ignoreRecommendations": true,
+	"files.autoSaveDelay": 1200,
+	"files.associations": {
+		"*.tmpl": "html",
+		"*.svelte": "html",
+		"*.ts": "typescript"
+	},
+	"outline.icons": false,
+	"outline.problems.badges": false,
+	"outline.problems.colors": false,
+	"outline.problems.enabled": false,
+	"search.maxResults": 1000,
+	"security.workspace.trust.untrustedFiles": "open",
+	"window.autoDetectHighContrast": false,
+	"workbench.editor.enablePreview": false,
+	"workbench.editor.enablePreviewFromQuickOpen": false,
+	"workbench.tips.enabled": false,
+	"editor.hover.enabled": false,
+	"zenMode.fullScreen": false,
+	"workbench.editorAssociations": {
+		"*.prof": "default"
+	},
+	"editor.glyphMargin": true,
+	"editor.colorDecorators": false,
+	"editor.bracketPairColorization.enabled": false,
+	"workbench.colorTheme": "Solarized Light",
+	"window.zoomLevel": 2,
+	"editor.rulers": [
+		// 120
+	],
+	"[python]": {
+		"editor.formatOnType": true
+	},
+	"git.openRepositoryInParentFolders": "always",
+	"editor.unicodeHighlight.invisibleCharacters": false,
+	"html.format.wrapLineLength": 0,
+	"window.commandCenter": false,
+	"workbench.settings.editor": "json",
+	"editor.unicodeHighlight.ambiguousCharacters": false,
+	"window.restoreWindows": "none",
+	"css.lint.unknownAtRules": "ignore",
+	"security.workspace.trust.banner": "never",
+	"scm.showOutgoingChanges": "never",
+	"explorer.confirmDragAndDrop": false,
+	"typescript.updateImportsOnFileMove.enabled": "always",
+	"javascript.preferences.quoteStyle": "double",
+	"[javascript]": {
+		"editor.defaultFormatter": "vscode.typescript-language-features",
+		"editor.formatOnSave": false
+	},
+	"[typescript]": {
+		"editor.defaultFormatter": "esbenp.prettier-vscode",
+		"editor.formatOnSave": false
+	},
+	"[typescriptreact]": {
+		"editor.defaultFormatter": "vscode.typescript-language-features"
+	},
+	"accessibility.signals.terminalBell": {
+		"sound": "on"
+	},
+	"terminal.integrated.enableVisualBell": true,
+	"[html]": {
+		"editor.defaultFormatter": "vscode.html-language-features"
+	},
+	"[css]": {
+		"editor.defaultFormatter": "vscode.css-language-features"
+	},
+	"[json]": {
+		"editor.defaultFormatter": "vscode.json-language-features"
+	},
+	// "breadcrumbs.enabled": false,
+	"editor.stickyScroll.enabled": false,
+	"scm.showHistoryGraph": false,
+	"scm.showChangesSummary": false,
+	"scm.showIncomingChanges": "never",
+	"files.autoGuessEncoding": false,
+	"files.defaultLanguage": "plaintext",
+	"editor.detectIndentation": false,
+	"diffEditor.ignoreTrimWhitespace": true,
+	"diffEditor.renderSideBySide": false,
+	"chat.commandCenter.enabled": false,
+	"workbench.activityBar.location": "hidden"
 }
