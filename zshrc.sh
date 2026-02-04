@@ -15,7 +15,6 @@ export HISTCONTROL=ignoreboth:erasedups
 export HOMEBREW_NO_AUTO_UPDATE=1
 export HOMEBREW_NO_INSTALL_CLEANUP=1
 
-export PATH=/Users/olegkovalov/flutter/bin:$PATH
 export PATH=/opt/homebrew/sbin:$PATH
 export PATH=/opt/homebrew/bin:$PATH
 export PATH=/opt/homebrew/opt/ruby/bin:$PATH
