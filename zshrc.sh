@@ -1,5 +1,8 @@
 # zsh config, https://olegk.dev
 
+GPG_TTY=$(tty)
+export GPG_TTY
+
 setopt HIST_EXPIRE_DUPS_FIRST
 setopt HIST_IGNORE_DUPS
 setopt HIST_IGNORE_ALL_DUPS
@@ -25,7 +28,7 @@ fi
 
 alias ght="go test -v -p=1 -count=100 -race -failfast -shuffle=on -timeout=30m ./... > testout.txt"
 alias shcfg="code ~/.zshrc"
-alias lnt="golangci-lint run -v --config=~/.golangci.yaml ./..."
+alias lnt="golangci-lint run -v --config=~/.golangci.yaml ./... > lint.txt"
 alias crl='function _crl() { curl -s "$1" | jq; }; _crl'
 
 alias la="ls -lAoh"
@@ -40,5 +43,17 @@ eval "$(atuin init zsh --disable-up-arrow)"
 convall() {
   ext=$1
   toext=$2
-  for i in *.$ext; do ffmpeg -i $i $i.$toext; done
+  for i in *.$ext; do ffmpeg -i $i -n $i.$toext; done
 }
+
+alias gcr='f(){ 
+  local repo="$1"
+  if [[ "$repo" =~ ^https://github\.com/ ]]; then
+    repo="${repo#https://github.com/}"
+    repo="${repo%.git}"
+  elif [[ "$repo" =~ ^git@github\.com: ]]; then
+    repo="${repo#git@github.com:}"
+    repo="${repo%.git}"
+  fi
+  git clone "git@github.com:${repo}.git" "${repo//\//--}"
+}; f'
